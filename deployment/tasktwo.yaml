@@ -1,0 +1,205 @@
+## Create Namespace ##
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tasktwo
+spec:
+  finalizers:
+  - kubernetes
+
+---
+## priorityClassName - So Pods can have priority ##
+
+apiVersion: scheduling.k8s.io/v1
+description: Used for system critical pods that must not be moved from their current
+  node.
+kind: PriorityClass
+metadata:
+  name: system-node-critical
+preemptionPolicy: PreemptLowerPriority
+value: 2000001000
+
+---
+
+## Pod Disruption Budget Yaml Manifest ##
+
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    owner: francis  # mapped to label of deployment and svc #
+  name: tasktwo-pdb
+  namespace: tasktwo
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      purpose: tasktwo
+---
+
+# Create Secret #
+apiVersion: v1
+data:
+  ca.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUU2RENDQXRDZ0F3SUJBZ0lRZUJlcXhRMWgrdkVmL3RkZVBKcGNOakFOQmdrcWhraUc5dzBCQVFzRkFEQU4KTVFzd0NRWURWUVFERXdKallUQWdGdzB5TWpBME1EUXdPVEkxTURkYUdBOHlNRFV5TURRd05EQTVNelV3TjFvdwpEVEVMTUFrR0ExVUVBeE1DWTJFd2dnSWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUNEd0F3Z2dJS0FvSUNBUURCClNtSkE4OFV1RWlmOXpiSjlJV3QvSCswTC9LV0ZaYXl4L3BRZGlXakxyaXk1eVFSeUxObmlEem8vbDVraWlvdzAKUXhmS0lqWGFkamF4bGwzWEticlNFM3hjM0grZ3Z6MksxT3R2UWY1Rk94SkJ1QzNEdHN3eTVCeDBYK3ZIenk0WQpkMnBnTnBVbzF6TzlSbEZoRTB2UGc0dC8zODZxcnhjL1VlaXVkelpVYVBmOUkxU2loSDhSQXRDUVdURkx5S0RqClpORUMrYU9QTmhEYkNoVkN1a2FYczF4Nm9JeVJoNFVHb2dJRnFwWlpndnFCTmRTaHFSS1lhTzhwYmFLS3hMaWoKWXhWWXRzK2tpQWM2bEtmVWd6UW9lU2ZjVkw4bk04QWoxdEliYlQzRUE0T0p2bG1uZkd0d1RFNEhlazl0a3VFdApHQkc0blpxdVkvdXM1ZFdMdFZLUVJjVnE1N1dubWNNL1owYWY0ZjNtYmR6bDlwK244WnVvVG0rRWZpSkY2NDFvClppZStEeWRqRFI0RHNsMjMzWFJVZFpOK1hIUWg3dDM1VURkaE01SnVwNWlkWXRPSU5uVVBLL3BZdTRncFRnSEQKYmZZckRqdGxBa20zMk9hYXhLUkhvaUMwOTQ5aDVWSUdvbnVPVXQrY2hLSDFLKzZwU25qcFFnbjFmMnJvRmhqaApzRFc5RmNUc0htYnlVdUU0V3dwZ1g3aGcxMXhmSVk2OFBpcDcrY0lhTktySGJ5ckxqV09MOXlqcHg0SXduUmx3CkMybGZOMEY4QldKNFl1a2lEZDRLQVZIelpuUXAxSlNLYkJ3TUZhM3JMVENmMzNiNDZ6OU5jSklmcHRueGhDZWYKWmhyMkVFOXoreHdMTlFOK3ZNMWdtcWkvVk1YZkRtYW1uWWEyVUxRQnZRSURBUUFCbzBJd1FEQU9CZ05WSFE4QgpBZjhFQkFNQ0FxUXdEd1lEVlIwVEFRSC9CQVV3QXdFQi96QWRCZ05WSFE0RUZnUVVIaGMrQzNxY2JzSVZjYkV6Ck1UbmI4YVlPMlY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dJQkFBcysrNGpYNFhjUzZmVkthZ3JTTW1HR3kwdk8KSGR2VEgrZzMzRVptcDJoaHdTem1WalFXNmUvNWR5N2ZWL2tBWWRELytTMnV2bFNOWmZnaEdvdWdpTVg5OU1vTQo5NTA0c2h2cFkrTzZXeGZBOStUZXRES2NaT2pvMWJXVk45WStnWG5tTTYyaTNlVTF3ZUlPRkY5R2wvTTY0ekw1CkE4elhsTzM1Qlg4czh5cld6alR6TEYwUGZRaEtWREhtbCtYVTlyczk0N01JR2NycDFpTnE2dGNFZ1R0ZkMrYk0KU0llK2tUbHV6V084V28xemdwQWJkNGRnei9seVhjdzFibVk0WTUzeDhSdTBuSm9ZOExWcjNoS21FaHNJTmNxTgpKWlExSXdFUXdhSHUzU3ZmVk80KzRYbHFnT2l4ZlB2QlhYL094Wm5WRlhENlRYbmEyajRvNGYrWFROMmpLRjhPCm95dG1vRzYxR3BzeUZuNlMxVVdmRXBGM1JzWlpUamJxeUpmMHlpQzV4S3RMemNvdlNqYXN0elhqc0ppSjdoWDYKSnJTd1pXQ3lEbmNjWDROTHd5c1laeWZHbkp1dVlXSnVDYVFNVjhNTzJERjU0My95TVRMT0tWYnpyV3FVUW56MApRdVhSY1JBaFRHQi93cnRWM04vNkRvbFZySFBDNUtzeElUSVpZOHZsUEtxVUdIaWFSV3F5alR2WkdPdzlzTFFnCjUvam9wNjEyNC9GVC9YdjY2cFF4aDhMRHNHK2hSSU9leVFqTkJ2bFpyWjNNMmdtcFFycS9mWFB3RHdhZ3c1U2oKU2NhZjZKdzVXWHQwTm1hNVBjSkI4YUdGTS9iaTVFb1hrWk9jaGRDRzNrUTZKY2Zhalo2cUN1bWRoMmE1QjhhZQpDamtNNGthdVZZcEtQZjZnCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  namespace: cnRtLXN3aXNlc3Rn
+  token: ZXlKaGJHY2lPaUpTVXpJMU5pSXNJbXRwWkNJNklteDNNRGxLUmxSbVJsUk5VVmhPTld4d1ozaHNlREZqUWtSRGJteFhNM2hHYjFaeGMzVjVVRk5QWDBVaWZRLmV5SnBjM01pT2lKcmRXSmxjbTVsZEdWekwzTmxjblpwWTJWaFkyTnZkVzUwSWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXVZVzFsYzNCaFkyVWlPaUp5ZEcwdGMzZHBjMlZ6ZEdjaUxDSnJkV0psY201bGRHVnpMbWx2TDNObGNuWnBZMlZoWTJOdmRXNTBMM05sWTNKbGRDNXVZVzFsSWpvaWNuUnRMWE4zYVhObGMzUm5MWFJ2YTJWdUxXbzRPV3B4SWl3aWEzVmlaWEp1WlhSbGN5NXBieTl6WlhKMmFXTmxZV05qYjNWdWRDOXpaWEoyYVdObExXRmpZMjkxYm5RdWJtRnRaU0k2SW5KMGJTMXpkMmx6WlhOMFp5SXNJbXQxWW1WeWJtVjBaWE11YVc4dmMyVnlkbWxqWldGalkyOTFiblF2YzJWeWRtbGpaUzFoWTJOdmRXNTBMblZwWkNJNklqTm1NR1EzTlRaa0xXSTFZMlV0TkdFMU9DMWhaR1UzTFRobE5UZzNZMlJqTVRjek5TSXNJbk4xWWlJNkluTjVjM1JsYlRwelpYSjJhV05sWVdOamIzVnVkRHB5ZEcwdGMzZHBjMlZ6ZEdjNmNuUnRMWE4zYVhObGMzUm5JbjAuWGI3Ni1MczM1Y21ranRrWmRRc2paRXBFSlBsRFZaa200UG1haEp1OFVTaWxFNnNyVGxMSUZzQmRCUDZOdDdzYTZHSVhqRmJPNmdlYkNMOUJqdHlRcEVMQWlBeVRsU05SYnpYbXpDc2hrSDgwWVlQMmFMNjBGRkR6aXkwMk9paFRZeU02aUZnNjk5U2UtTHoyeUUxYjRhM2UwUUpRa3JiU1lDWGJIRkFmOUZNSzk3SG9PTGJPOG5EaFdGTjNHSDBDaG9nZDRnc1ZsNk1CRk84V0s5OTBhNjljTldrODUxOXlNNjJSNVNyX0FIMzJVMk1pYlVWZnNJcm9sUW9SU1B1eHBoN3VFMlpqXzFMNUZkaW42bzBJaHhWcHFpaFczUUtBamFEY0NIODZtSnQ5WUpxcmIwYnRZOVkxbWt1bEJkS0M4VHVzakZGVUVtZG54SDVoWmlPSnJENmxsSTB4YlZMQ3MySjNoTGJERTB4QWY1eWRMY2ZGOHd5MkRfRmloMWtTaWY4aWV0X1U3aDlyaFk1akI2SXF3akcwbmQyMGFVOEhUX1hjVDZlRnhaZ2t2QlQtTWluM2FlbUZrOU5qV2xXVUV1ZDk0aGRXNEM4M1I0ekQ0MW5KbVE0YldEUkdLTzJkNG9leE1kXzlCbTdUelFXTGpBVzJMYmFiejNNSmpMaDhMS1RVYk8zX3hRUGNaZTdzMWViWVc5UEVlR2xLUjZMV2VmNEhIQ25YZjFhcWNrbHhScHpzRk9QWHh0TXJIbFFvV3FMTHBSMElvSGhLMktyY1lzMWFOM29PQ1pycGRCbWhoYmIxdmtxUXJlajRfYW9ld2czZmZEZFZBZlJFVFNidVcxMnJmd2dYbWdvNXM1UGJiQlhUTHBVZ1RVa3NvYjZBbXV6NGJEamtCb1U=
+kind: Secret
+metadata:
+  name: API_KEY
+  namespace: tasktwo
+type: kubernetes.io/service-account-token
+
+---
+# Create Service Account example 1 #
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels: #used for deployments and pdb#
+    owner: francis
+  name: tasktwo-sa
+  namespace: tasktwo
+secrets:
+- name: API_KEY
+
+---
+
+ # Create clusterrole.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: clusterrole-tasktwo
+  labels:
+    owner: francis
+rules:
+  - verbs:
+      - "*"
+    apiGroups:
+      - '*'
+    resources:
+      - "*"
+
+---      
+
+# Create clusterrolebindings.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rolebinding-tasktwo
+subjects:
+  - kind: ServiceAccount   ## Bind Service Account here ##
+    name: tasktwo-sa
+    namespace: tasktwo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: clusterrole-tasktwo
+
+---
+
+## Deployemnt Yaml ##
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    owner: francis #used for pdb#
+  name: tasktwo-deployment
+  namespace: tasktwo
+spec:
+  progressDeadlineSeconds: 120
+  replicas: 3
+  selector:
+    matchLabels:
+      purpose: tasktwo
+  strategy:  # answer to last Acceptance criteria #
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        owner: francis
+    spec:
+      containers:
+      - name: tasktwo-deployment
+        image: fpoku92/registry:tasktwo
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /index.html
+            port: 8080
+            scheme: HTTP
+      failureThreshold: 5
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "100m"
+          limits:
+            memory: "500Mi"
+            cpu: "300m"      
+        ports:
+        - containerPort: 8080
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 1000 # define in container first (dockerfile) #
+          runAsGroup: 3000 # define in container first (dockerfile) #
+          fsGroup: 2000 # define in container first (dockerfile) #
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html/
+          name: usr   
+      nodeSelector:
+        beta.kubernetes.io/os: linux #change depending on node
+      priorityClassName: system-node-critical #referncing priorityClass #
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: tasktwo-sa #refernece service account name#
+      serviceAccountName: tasktwo-sa
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - effect: NoExecute
+        key: node.kubernetes.io/unreachable
+        operator: Exists
+        tolerationSeconds: 30
+      - effect: NoExecute
+        key: node.kubernetes.io/not-ready
+        operator: Exists
+        tolerationSeconds: 30
+      volumes:
+      - name: tasktwo-volume
+        secret:
+          secretName: API_KEY
+          optional: false # default setting; "API_KEY" must exist   
+
+---
+# Create service 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tasktwo-service
+  namespace: tasktwo
+spec:
+  selector:
+    purpose: tasktwo
+  ports:
+  - protocol: "TCP"
+    port: 80
+    targetPort: 8080
+  type: NodePort
