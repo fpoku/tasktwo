@@ -31,7 +31,7 @@ resource "null_resource" "get_credentials" {
 
   provisioner "local-exec" {
 
-    command = "az aks get-credentials --resource-group ${azurerm_resource_group.rg.name} --name ${module.aks.cluster_name} --overwrite-existing"
+    command = "az aks get-credentials --resource-group ${azurerm_resource_group.rg.name} --name ${var.aks_name} --overwrite-existing"
   }
 }
 

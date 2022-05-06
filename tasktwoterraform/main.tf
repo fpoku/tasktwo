@@ -1,9 +1,10 @@
 provider "azurerm" {
     version = "~> 2.46.0"
     features {}
+
   }  
 
-module "consul" {
+module "tasktwo" {
 
   source = "../"
 }

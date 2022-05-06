@@ -8,7 +8,7 @@ output "location" {
     value = var.location
 }
 
-output "cluster_name" {
+output "aks_name" {
   description = "Cluster name to be used in the context of kubectl"
-  value = module.aks.cluster_name
+  value = var.aks_name
 }
