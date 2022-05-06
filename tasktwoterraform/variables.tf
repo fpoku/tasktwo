@@ -100,12 +100,6 @@ variable "docker_bridge_cidr" {
   default     = "172.17.0.1/16"
 }
 
-variable "end_date" {
-  description = "The End Date which the Password is valid until, formatted as a RFC3339 date string (e.g. 2018-01-01T01:02:03Z)."
-  type        = string
-  default     = "2050-01-01T00:00:00Z"
-}
-
 variable "sku_tier" {
   description = "(Optional) Defines the SLA plan for the availability of system. Valid options are Free or Paid, paid option enables the Uptime SLA feature (see https://docs.microsoft.com/en-us/azure/aks/uptime-sla for more info)"
   type        = string
