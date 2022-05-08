@@ -31,6 +31,9 @@ max_pods = 110  # how many pods are allowed to schedule per node #
 docker_bridge_cidr =  "172.18.0.1/16" # default, don't change #
 
 tags = {
+
 environment = "staging"
-owner = "francis@fpoku92outlook.onmicrosoft.com"
+
+technical_owner = "jay.mistry@kantar.com"
+
 }
